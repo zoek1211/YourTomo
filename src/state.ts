@@ -214,7 +214,10 @@ function decideInner(events: any[], activity: Activity = {}, ci: CiInfo = {}, no
     const pushTimes = pushes(events);
     const pushes24h = pushTimes.filter((t) => now.getTime() - t.getTime() <= 24 * 3600e3);
     const merged = Math.max(mergedPrsLast24h(events, now), activity.merged24h ?? 0);
-    const lastPush = pushTimes[0] ?? activity.lastPush ?? null;
+    // the public events feed can lag hours or drop pushes, so take whichever
+    // source saw the most recent push
+    const candidates = [pushTimes[0], activity.lastPush].filter((t): t is Date => !!t && !isNaN(t.getTime()));
+    const lastPush = candidates.length ? new Date(Math.max(...candidates.map((t) => t.getTime()))) : null;
 
     // broken CI outranks a happy cat (time-boxed to 24h upstream in the fetcher)
     if (ci.failed) {

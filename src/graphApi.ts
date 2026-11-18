@@ -19,7 +19,7 @@ const CALENDAR_QUERY = (user: string) => `{
 const ACTIVITY_QUERY = (user: string) => `{
   user(login: \"${user}\") {
     repositories(first: 15, ownerAffiliations: OWNER, orderBy: {field: PUSHED_AT, direction: DESC}) {
-      nodes { pushedAt }
+      nodes { name pushedAt }
     }
     pullRequests(first: 10, states: MERGED, orderBy: {field: UPDATED_AT, direction: DESC}) {
       nodes { mergedAt }
@@ -68,7 +68,10 @@ export async function fetchActivity(token: string | undefined, user = "prsdx"):
     try {
         const data = await post(ACTIVITY_QUERY(user), token);
         const u = data.user;
+        // skip the profile repo (user/user): the pet workflow itself commits
+        // there every run, which would keep the cat fed forever
         const pushed: Date[] = u.repositories.nodes
+            .filter((n: any) => String(n.name ?? "").toLowerCase() !== user.toLowerCase())
             .map((n: any) => new Date(n.pushedAt))
             .filter((t: Date) => !isNaN(t.getTime()));
         const now = Date.now();
