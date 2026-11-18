@@ -1,27 +1,28 @@
 // Hand-crafted pixel grids for the cat - mochi style per owner reference:
 // solid blob body, SHORT ears with pink insides, full-width blue collar band,
 // dot eyes, single nose pixel, rounded uniform silhouette.
-// "." = empty, "X" = body, "p" = pink nose. Eyes/ears/collar/whiskers/brows
-// are coordinate overlays so the renderer can recolour and animate them.
+// "." = empty, "X" = body, "P" = Siamese point (ears/mask/paws), "p" = pink nose.
+// Eyes/ears/collar/whiskers/brows are coordinate overlays so the renderer can
+// recolour and animate them.
 
 // ---------------- banner cat: sitting front view (20 wide x 16 tall)
 export const SIT_FRONT = [
     "....................",
-    "....XX......XX....",
-    "..XXXX........XXXX..",
+    "....PP......PP....",
+    "..PPPP........PPPP..",
     "..XXXXXXXXXXXXXXXX..",
-    "..XXXXXXXXXXXXXXXX..",
-    "..XXXoXXXXXXXXoXXX..",
-    "..XXXXXXXXXXXXXXXX..",
-    "..XXXXXXXXpXXXXXXX..",
-    "..XXXXXXXXXXXXXXXX..",
-    "..XXXXXXXXXXXXXXXX..",
-    "..XXXXXXXXXXXXXXXX..",
-    "..XXXXXXXXXXXXXXXX..",
+    "..XXXXXXXPPXXXXXXX..",
+    "..XXXoXXPPPPXXoXXX..",
+    "..XXXXXPPPPPPXXXXX..",
+    "..XXXXXPPPpPPXXXXX..",
+    "..XXXXXXPPPPXXXXXX..",
     "..XXXXXXXXXXXXXXXX..",
     "..XXXXXXXXXXXXXXXX..",
     "..XXXXXXXXXXXXXXXX..",
-    "...XXX..XXXX..XXX...",
+    "..XXXXXXXXXXXXXXXX..",
+    "..XXXXXXXXXXXXXXXX..",
+    "..XXXXXXXXXXXXXXXX..",
+    "...PPP..PPPP..PPP...",
 ];
 
 export const SIT_EYES: Array<[number, number]> = [[5, 5], [14, 5]];
@@ -36,8 +37,8 @@ export const TAIL_B: Array<[number, number]> = [[19, 15], [19, 14], [19, 13], [1
 // ---------------- sleeping curl (20 x 14)
 export const CURL_BODY = [
     "....................",
-    ".....X....X.........",
-    ".....XX..XX.........",
+    ".....P....P.........",
+    ".....PP..PP.........",
     "....XXXXXXXX........",
     "...XXXXXXXXXX.......",
     "..XXXXXXXXXXXX......",
@@ -55,19 +56,19 @@ export const CURL_LIDS: Array<[number, number]> = [[7, 6], [8, 6], [12, 6], [13,
 // ---------------- graph kitty: small front mochi, solid fill (16 x 14)
 export const FRONT_BODY = [
     "................",
-    "..XX........XX..",
-    "..XXXX....XXXX..",
+    "..PP........PP..",
+    "..PPPP....PPPP..",
     "..XXXXXXXXXXXX..",
-    "..XXXXXXXXXXXX..",
-    "..XXoXXXXXXoXX..",
-    "..XXXXXXXXXXXX..",
-    "..XXXXXppXXXXX..",
-    "..XXXXXXXXXXXX..",
+    "..XXXXXPPXXXXX..",
+    "..XXoXPPPPXoXX..",
+    "..XXXXPPPPXXXX..",
+    "..XXXXPppPXXXX..",
+    "..XXXXXPPXXXXX..",
     "..XXXXXXXXXXXX..",
     "..XXXXXXXXXXXX..",
     "..XXXXXXXXXXXX..",
     ".XXXXXXXXXXXXXX.",
-    ".XXX..XXXX..XXX.",
+    ".PPP..PPPP..PPP.",
 ];
 export const FRONT_EYES: Array<[number, number]> = [[5, 5], [10, 5]];
 export const FRONT_WHISKERS: Array<[number, number]> = [[1, 6], [1, 7], [14, 6], [14, 7]];

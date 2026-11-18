@@ -23,8 +23,8 @@ const INTRO_S = 7;
 type Pal = Record<string, string>;
 
 export const PALETTES: Record<string, Pal> = {
-    dark: { bg: "#0d1117", body: "#e6edf3", accent: "#58a6ff", pink: "#ff9bce", ground: "#30363d", text: "#8b949e", heart: "#ff7b72", lid: "#0d1117", yarn: "#d2a8ff", collar: "#58a6ff", tag: "#39d353", fire: "#ffa657", ember: "#ff7b72", wood: "#8b5e34", moon: "#e3b341", star: "#e6edf3", gold: "#e3b341", pumpkin: "#f0823d", lemon: "#ffd33d", shades: "#24292f" },
-    light: { bg: "#ffffff", body: "#1f2328", accent: "#0969da", pink: "#e8590c", ground: "#d0d7de", text: "#57606a", heart: "#cf222e", lid: "#ffffff", yarn: "#8250df", collar: "#0969da", tag: "#1a7f37", fire: "#e8590c", ember: "#cf222e", wood: "#9a6b3f", moon: "#b8860b", star: "#57606a", gold: "#bf8700", pumpkin: "#d97706", lemon: "#e3b341", shades: "#24292f" },
+    dark: { bg: "#0d1117", body: "#f3e9d8", point: "#6b4a38", accent: "#58a6ff", pink: "#ff9bce", ground: "#30363d", text: "#8b949e", heart: "#ff7b72", lid: "#0d1117", yarn: "#d2a8ff", collar: "#58a6ff", tag: "#39d353", fire: "#ffa657", ember: "#ff7b72", wood: "#8b5e34", moon: "#e3b341", star: "#e6edf3", gold: "#e3b341", pumpkin: "#f0823d", lemon: "#ffd33d", shades: "#24292f" },
+    light: { bg: "#ffffff", body: "#e3d2b4", point: "#4a3328", accent: "#0969da", pink: "#e8590c", ground: "#d0d7de", text: "#57606a", heart: "#cf222e", lid: "#ffffff", yarn: "#8250df", collar: "#0969da", tag: "#1a7f37", fire: "#e8590c", ember: "#cf222e", wood: "#9a6b3f", moon: "#b8860b", star: "#57606a", gold: "#bf8700", pumpkin: "#d97706", lemon: "#e3b341", shades: "#24292f" },
 };
 
 const STATE_TEMPO: Record<string, number> = { zoomies: 14, content: 32, overheat: 20, release: 20, sick: 44 };
@@ -68,8 +68,8 @@ function blink(pal: Pal, y0: number): string[] {
 }
 
 function tailWag(pal: Pal, y0: number, dur = "1.4s"): string[] {
-    const a = pixels(sprites.TAIL_A, pal.body, 0, y0).join("");
-    const b = pixels(sprites.TAIL_B, pal.body, 0, y0).join("");
+    const a = pixels(sprites.TAIL_A, pal.point, 0, y0).join("");
+    const b = pixels(sprites.TAIL_B, pal.point, 0, y0).join("");
     return [
         `<g><animate attributeName="opacity" values="1;0;1" keyTimes="0;0.5;1" calcMode="discrete" dur="${dur}" repeatCount="indefinite"/>${a}</g>`,
         `<g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" calcMode="discrete" dur="${dur}" repeatCount="indefinite"/>${b}</g>`,
@@ -107,8 +107,8 @@ function bodyGroup(pal: Pal, colors: Record<string, string>, y0: number, masterD
     if (batWindow) {
         const [w0, w1] = batWindow;
         const mid = (w0 + w1) / 2.0;
-        const tucked = pixels(sprites.PAW_TUCKED, pal.body, 0, y0).join("");
-        const out = pixels(sprites.PAW_EXTENDED, pal.body, 0, y0).join("");
+        const tucked = pixels(sprites.PAW_TUCKED, pal.point, 0, y0).join("");
+        const out = pixels(sprites.PAW_EXTENDED, pal.point, 0, y0).join("");
         const kt = `0;${w0.toFixed(3)};${mid.toFixed(3)};${w1.toFixed(3)};1`;
         body.push(`<g><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="${kt}" calcMode="discrete" dur="${masterDur}s" begin="${begin}s" repeatCount="indefinite"/>${tucked}</g>`);
         body.push(`<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="${kt}" calcMode="discrete" dur="${masterDur}s" begin="${begin}s" repeatCount="indefinite"/>${out}</g>`);
@@ -326,7 +326,7 @@ function routineCat(state: string, pal: Pal, colors: Record<string, string>, wee
     cat.push(...bodyGroup(pal, colors, CAT_Y, dur, [0.66, 0.78], "1.4s", INTRO_S));
     cat.push(...headGroup(state, pal, colors, CAT_Y, dur, [0.15, 0.33], INTRO_S));
     // raised-paw wave while the cat sits at home (master-timeline windows 0-0.12, 0.82-1)
-    const wave = pixels(sprites.PAW_WAVE, pal.body, 0, CAT_Y).join("");
+    const wave = pixels(sprites.PAW_WAVE, pal.point, 0, CAT_Y).join("");
     cat.push(`<g opacity="0"><animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.12;0.13;0.82;0.83;1" calcMode="discrete" dur="${dur}s" begin="${INTRO_S}s" repeatCount="indefinite"/>` +
         `<g><animate attributeName="opacity" values="1;0;1" calcMode="discrete" dur="0.5s" repeatCount="indefinite"/>${wave}</g></g>`);
     if (weekendShades) cat.push(...pixels(sprites.SHADES, pal.shades, 0, CAT_Y));
@@ -371,7 +371,7 @@ export function buildSvg(state: string, caption: string, palette = "dark", greet
         pal.collar = opts.accent;
     }
     if (state === "overheat") pal.body = "#ff7b72";
-    const colors = { X: pal.body, p: pal.pink };
+    const colors = { X: pal.body, P: pal.point, p: pal.pink };
     const parts = [
         `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="github pet: ${esc(state)}">`,
         `<title>github pet - ${esc(state)}</title>`,
