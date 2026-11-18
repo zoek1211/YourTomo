@@ -19,9 +19,14 @@ const ATTRIBUTION = !["0", "false", "no"].includes((process.env.PET_ATTRIBUTION 
 
 async function main(): Promise<void> {
     const token = process.env.GITHUB_TOKEN || process.env.PET_GITHUB_TOKEN;
-    const [events, repos, profile] = await Promise.all([fetchEvents(USER), fetchRepos(USER), fetchProfile(USER)]);
+    const [rawEvents, repos, profile] = await Promise.all([fetchEvents(USER), fetchRepos(USER), fetchProfile(USER)]);
+    // pushes to these repos never feed the cat: the profile repo (the pet
+    // workflow commits there every run) and this cat's own code fork
+    const ignored = new Set([USER.toLowerCase(), "yourtomo"]);
+    const events = rawEvents.filter((e: any) =>
+        e?.type !== "PushEvent" || !ignored.has(String(e?.repo?.name ?? "").split("/").pop()!.toLowerCase()));
     const langs = await fetchLanguages(USER, repos);
-    const [calendar, activity] = await Promise.all([fetchCalendar(token, USER), fetchActivity(token, USER)]);
+    const [calendar, activity] = await Promise.all([fetchCalendar(token, USER), fetchActivity(token, USER, ignored)]);
     const ci = await fetchCiStatus(USER);
     const openIssues = await fetchOpenIssues(USER);
     const catName = process.env.PET_CAT_NAME || "";
@@ -57,9 +62,18 @@ async function main(): Promise<void> {
     if (starMilestone) labelExtra.push(`just hit ${starMilestone} stars!!`);
     if (followerMilestone) labelExtra.push(`just hit ${followerMilestone} followers!!`);
 
+    // "hacking on X": newest push from either the events feed (can lag or miss
+    // pushes) or the repos' pushedAt times
+    const feedPush = events.find((e: any) => e?.type === "PushEvent");
+    const feedTime = feedPush ? new Date(feedPush.created_at).getTime() : 0;
+    const repoTime = activity?.lastPush?.getTime() ?? 0;
+    const hackingOn = activity?.lastPushRepo && repoTime > feedTime
+        ? activity.lastPushRepo.slice(0, 24)
+        : lastPushedRepo(events) ?? "";
+
     // scene signals - all derived from real data
     const scene = {
-        hackingOn: lastPushedRepo(events) ?? "",
+        hackingOn,
         streakDays: streak,
         birthday: isBirthday(profile?.createdAt, now),
         hour: ownerHour(now),

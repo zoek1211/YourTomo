@@ -62,18 +62,20 @@ export async function fetchCalendar(token: string | undefined, user = "prsdx"): 
     }
 }
 
-export async function fetchActivity(token: string | undefined, user = "prsdx"):
-    Promise<{ lastPush: Date | null; merged24h: number } | null> {
+export async function fetchActivity(token: string | undefined, user = "prsdx", ignored: Set<string> = new Set([user.toLowerCase()])):
+    Promise<{ lastPush: Date | null; lastPushRepo: string | null; merged24h: number } | null> {
     if (!token) { console.error("fetchActivity: no token provided"); return null; }
     try {
         const data = await post(ACTIVITY_QUERY(user), token);
         const u = data.user;
-        // skip the profile repo (user/user): the pet workflow itself commits
-        // there every run, which would keep the cat fed forever
-        const pushed: Date[] = u.repositories.nodes
-            .filter((n: any) => String(n.name ?? "").toLowerCase() !== user.toLowerCase())
-            .map((n: any) => new Date(n.pushedAt))
-            .filter((t: Date) => !isNaN(t.getTime()));
+        // skip ignored repos (lowercased short names), e.g. the profile repo
+        // the pet workflow commits to every run, which would keep the cat fed forever
+        const repos: Array<{ name: string; t: Date }> = u.repositories.nodes
+            .filter((n: any) => !ignored.has(String(n.name ?? "").toLowerCase()))
+            .map((n: any) => ({ name: String(n.name ?? ""), t: new Date(n.pushedAt) }))
+            .filter((r: { t: Date }) => !isNaN(r.t.getTime()))
+            .sort((a: { t: Date }, b: { t: Date }) => b.t.getTime() - a.t.getTime());
+        const pushed: Date[] = repos.map((r) => r.t);
         const now = Date.now();
         let merged = 0;
         for (const n of u.pullRequests.nodes) {
@@ -81,7 +83,7 @@ export async function fetchActivity(token: string | undefined, user = "prsdx"):
             if (!isNaN(t.getTime()) && now - t.getTime() <= 24 * 3600e3) merged++;
         }
         const lastPush = pushed.length ? new Date(Math.max(...pushed.map((t) => t.getTime()))) : null;
-        return { lastPush, merged24h: merged };
+        return { lastPush, lastPushRepo: repos[0]?.name ?? null, merged24h: merged };
     } catch {
         return null;
     }
