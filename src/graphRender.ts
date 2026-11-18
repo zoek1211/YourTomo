@@ -13,8 +13,8 @@ const LEFT = 50;
 const WIDTH = 894, HEIGHT = 210;
 
 const PALETTES: Record<string, any> = {
-    dark: { bg: "#0d1117", body: "#f3e9d8", point: "#6b4a38", accent: "#58a6ff", pink: "#ff9bce", text: "#8b949e", heart: "#ff7b72", lid: "#0d1117", collar: "#58a6ff", tag: "#39d353", cells: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"] },
-    light: { bg: "#ffffff", body: "#e3d2b4", point: "#4a3328", accent: "#0969da", pink: "#e8590c", text: "#57606a", heart: "#cf222e", lid: "#ffffff", collar: "#0969da", tag: "#1a7f37", cells: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"] },
+    dark: { bg: "#0d1117", body: "#e6edf3", fur: "#f3e9d8", point: "#6b4a38", accent: "#58a6ff", pink: "#ff9bce", text: "#8b949e", heart: "#ff7b72", lid: "#0d1117", collar: "#58a6ff", tag: "#39d353", cells: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"] },
+    light: { bg: "#ffffff", body: "#1f2328", fur: "#e3d2b4", point: "#4a3328", accent: "#0969da", pink: "#e8590c", text: "#57606a", heart: "#cf222e", lid: "#ffffff", collar: "#0969da", tag: "#1a7f37", cells: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"] },
 };
 
 const STATE_TEMPO: Record<string, number> = { zoomies: 16, content: 30, hungry: 36, grumpy: 42, overheat: 12 };
@@ -91,8 +91,8 @@ function kitty(state: string, pal: any, colors: Record<string, string>, xMin: nu
 
 export function buildGraphSvg(state: string, caption: string, calendar: Calendar | null, palette = "dark", attribution = true): string {
     const pal = { ...PALETTES[palette] };
-    if (state === "overheat") pal.body = "#ff7b72";
-    const colors = { X: pal.body, P: pal.point, p: pal.pink };
+    if (state === "overheat") { pal.body = "#ff7b72"; pal.fur = "#ff7b72"; }
+    const colors = { X: pal.fur, P: pal.point, p: pal.pink };
     const parts = [
         `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="contribution graph cat: ${esc(state)}">`,
         `<title>contribution graph cat - ${esc(state)}</title>`,

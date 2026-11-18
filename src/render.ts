@@ -23,8 +23,8 @@ const INTRO_S = 7;
 type Pal = Record<string, string>;
 
 export const PALETTES: Record<string, Pal> = {
-    dark: { bg: "#0d1117", body: "#f3e9d8", point: "#6b4a38", accent: "#58a6ff", pink: "#ff9bce", ground: "#30363d", text: "#8b949e", heart: "#ff7b72", lid: "#0d1117", yarn: "#d2a8ff", collar: "#58a6ff", tag: "#39d353", fire: "#ffa657", ember: "#ff7b72", wood: "#8b5e34", moon: "#e3b341", star: "#e6edf3", gold: "#e3b341", pumpkin: "#f0823d", lemon: "#ffd33d", shades: "#24292f" },
-    light: { bg: "#ffffff", body: "#e3d2b4", point: "#4a3328", accent: "#0969da", pink: "#e8590c", ground: "#d0d7de", text: "#57606a", heart: "#cf222e", lid: "#ffffff", yarn: "#8250df", collar: "#0969da", tag: "#1a7f37", fire: "#e8590c", ember: "#cf222e", wood: "#9a6b3f", moon: "#b8860b", star: "#57606a", gold: "#bf8700", pumpkin: "#d97706", lemon: "#e3b341", shades: "#24292f" },
+    dark: { bg: "#0d1117", body: "#e6edf3", fur: "#f3e9d8", point: "#6b4a38", accent: "#58a6ff", pink: "#ff9bce", ground: "#30363d", text: "#8b949e", heart: "#ff7b72", lid: "#0d1117", yarn: "#d2a8ff", collar: "#58a6ff", tag: "#39d353", fire: "#ffa657", ember: "#ff7b72", wood: "#8b5e34", moon: "#e3b341", star: "#e6edf3", gold: "#e3b341", pumpkin: "#f0823d", lemon: "#ffd33d", shades: "#24292f" },
+    light: { bg: "#ffffff", body: "#1f2328", fur: "#e3d2b4", point: "#4a3328", accent: "#0969da", pink: "#e8590c", ground: "#d0d7de", text: "#57606a", heart: "#cf222e", lid: "#ffffff", yarn: "#8250df", collar: "#0969da", tag: "#1a7f37", fire: "#e8590c", ember: "#cf222e", wood: "#9a6b3f", moon: "#b8860b", star: "#57606a", gold: "#bf8700", pumpkin: "#d97706", lemon: "#e3b341", shades: "#24292f" },
 };
 
 const STATE_TEMPO: Record<string, number> = { zoomies: 14, content: 32, overheat: 20, release: 20, sick: 44 };
@@ -365,13 +365,13 @@ export interface SceneOpts {
 export function buildSvg(state: string, caption: string, palette = "dark", greeting = "hey! welcome to my corner", contact = "", attribution = true, opts: SceneOpts = {}): string {
     const pal: Pal = { ...PALETTES[palette] };
     PAL_CURRENT = pal;
-    if (opts.bodyOverride) pal.body = opts.bodyOverride;
+    if (opts.bodyOverride) { pal.body = opts.bodyOverride; pal.fur = opts.bodyOverride; }
     if (opts.accent && /^#[0-9a-f]{6}$/i.test(opts.accent)) {
         pal.accent = opts.accent;
         pal.collar = opts.accent;
     }
-    if (state === "overheat") pal.body = "#ff7b72";
-    const colors = { X: pal.body, P: pal.point, p: pal.pink };
+    if (state === "overheat") { pal.body = "#ff7b72"; pal.fur = "#ff7b72"; }
+    const colors = { X: pal.fur, P: pal.point, p: pal.pink };
     const parts = [
         `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="github pet: ${esc(state)}">`,
         `<title>github pet - ${esc(state)}</title>`,
