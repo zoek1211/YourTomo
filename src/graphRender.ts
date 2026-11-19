@@ -116,7 +116,7 @@ export function buildGraphSvg(state: string, caption: string, calendar: Calendar
     parts.push(...kitty(state, pal, colors, LEFT, LEFT + weeks * STRIDE - 16 * SCALE - 6));
     let label = `state: ${state} - ${caption}`;
     label += total !== null ? ` · ${total} contributions this year` : " · graph data unavailable";
-    label += " · regenerated every 6h";
+    label += " · regenerated every hour";
     if (attribution) label += " · github-pet by prsdx";
     parts.push(`<text x="16" y="${HEIGHT - 10}" font-family="monospace" font-size="12" fill="${pal.text}">${esc(label)}</text>`);
     parts.push("</svg>");

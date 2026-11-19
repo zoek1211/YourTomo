@@ -403,7 +403,7 @@ export function buildSvg(state: string, caption: string, palette = "dark", greet
     if ((opts.streakDays ?? 0) >= 3) label += ` · ${opts.streakDays}-day streak`;
     if (opts.birthday) label += " · it is my github birthday!!";
     if (opts.labelExtra && opts.labelExtra.length) label += ` · ${opts.labelExtra.join(" · ")}`;
-    label += " · regenerated every 6h";
+    label += " · regenerated every hour";
     if (attribution) label += " · github-pet by prsdx";
     parts.push(`<text x="16" y="${HEIGHT - 10}" font-family="monospace" font-size="12" fill="${pal.text}">${esc(label)}</text>`);
     parts.push("</svg>");
